@@ -22,6 +22,7 @@ export default function Home() {
   const [repositoriesInfo, setRepositoriesInfo] = useState([]);
   const [pageView, setPageView] = useState(1)
   const [name, setName] = useState<Node | undefined>()
+  
 
   useEffect(() => {
     fetch('https://api.github.com/graphql', {
@@ -33,7 +34,7 @@ export default function Home() {
       body: JSON.stringify({
         query: `
         {
-          user(login: "Rihkar") {
+          user(login: "${process.env.NEXT_PUBLIC_GITHUB_USERNAME}") {
             avatarUrl
             pinnedItems(first: 6) {
               edges {
@@ -59,9 +60,7 @@ export default function Home() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        
+      .then((data) => {        
         setImgUrl(data.data.user.avatarUrl);
         setRepositoriesInfo(data.data.user.pinnedItems.edges);
       })
